@@ -1,8 +1,8 @@
-import { EIP2930AccessItem } from "@/libs/eip2930/mod.ts";
 import { RlpDataLike } from "@/libs/rlp/data/mod.ts";
 import { RlpUintLike } from "@/libs/rlp/uint/mod.ts";
 import { Readable, Writable } from "@hazae41/binary";
 import { EIP2718TypedTransactionEnvelope } from "@hazae41/eip2718";
+import { EIP2930AccessItem } from "@hazae41/eip2930";
 import { RlpItem, RlpList } from "@hazae41/rlp";
 
 export interface EIP1559UnsignedTransactionInit {
