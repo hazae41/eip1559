@@ -18,7 +18,19 @@ npm install @hazae41/eip1559
 ## Usage
 
 ```tsx
-const utx = EIP1559UnsignedTransaction.from({ chainId: 1n, nonce: 0n, maxFeePerGas: 100n, maxPriorityFeePerGas: 1000n, gasLimit: 1000n, destination: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045", amount: 100n, data: new Uint8Array([1, 2, 3]) })
+const tx = { 
+  chainId: 1n, 
+  nonce: 0n, 
+  maxFeePerGas: 100n, 
+  maxPriorityFeePerGas: 1000n, 
+  gasLimit: 1000n, 
+  destination: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045", 
+  amount: 100n, 
+  data: new Uint8Array([1, 2, 3]),
+  accessList: [{ address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045", storage: ["0x00", "0x01"] }]
+} as const
+
+const utx = EIP1559UnsignedTransaction.from(tx)
 const stx = utx.sign(key.sign(keccak256(utx.encode()))) // EIP1559SignedTransaction
 
 const raw = stx.encode() // Uint8Array

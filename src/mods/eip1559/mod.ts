@@ -1,3 +1,4 @@
+import { EIP2930AccessItem } from "@/libs/eip2930/mod.ts";
 import { RlpDataLike } from "@/libs/rlp/data/mod.ts";
 import { RlpUintLike } from "@/libs/rlp/uint/mod.ts";
 import { Readable, Writable } from "@hazae41/binary";
@@ -17,7 +18,7 @@ export interface EIP1559UnsignedTransactionInit {
   readonly amount: RlpUintLike
   readonly data?: RlpDataLike
 
-  readonly accessList?: RlpList
+  readonly accessList?: EIP2930AccessItem[]
 }
 
 export class EIP1559UnsignedTransaction {
@@ -31,7 +32,7 @@ export class EIP1559UnsignedTransaction {
     readonly destination: RlpDataLike = new Uint8Array(),
     readonly amount: RlpUintLike,
     readonly data: RlpDataLike = new Uint8Array(),
-    readonly accessList: RlpList = RlpList.from([]),
+    readonly accessList: EIP2930AccessItem[] = [],
   ) { }
 
   static from(init: EIP1559UnsignedTransactionInit): EIP1559UnsignedTransaction {
@@ -59,7 +60,7 @@ export class EIP1559UnsignedTransaction {
     const amount = RlpUintLike.from(RlpItem.as(list.value[6]))
     const data = RlpDataLike.from(RlpItem.as(list.value[7]))
 
-    const accessList = RlpList.as(list.value[8])
+    const accessList = RlpList.as(list.value[8]).value.map(EIP2930AccessItem.from)
 
     return new EIP1559UnsignedTransaction(chainId, nonce, maxPriorityFeePerGas, maxFeePerGas, gasLimit, destination, amount, data, accessList)
   }
@@ -77,7 +78,7 @@ export class EIP1559UnsignedTransaction {
     const amount = RlpUintLike.into(this.amount)
     const data = RlpDataLike.into(this.data)
 
-    const accessList = this.accessList
+    const accessList = RlpList.from(this.accessList.map(EIP2930AccessItem.into))
 
     const list = RlpList.from([chainId, nonce, maxPriorityFeePerGas, maxFeePerGas, gasLimit, destination, amount, data, accessList])
 
@@ -110,7 +111,7 @@ export interface EIP1559SignedTransactionInit {
   readonly amount: RlpUintLike
   readonly data?: RlpDataLike
 
-  readonly accessList?: RlpList
+  readonly accessList?: EIP2930AccessItem[]
 
   readonly yParity: RlpUintLike
 
@@ -129,7 +130,7 @@ export class EIP1559SignedTransaction {
     readonly destination: RlpDataLike = new Uint8Array(),
     readonly amount: RlpUintLike,
     readonly data: RlpDataLike = new Uint8Array(),
-    readonly accessList: RlpList = RlpList.from([]),
+    readonly accessList: EIP2930AccessItem[] = [],
     readonly yParity: RlpUintLike,
     readonly r: RlpDataLike,
     readonly s: RlpDataLike,
@@ -159,7 +160,7 @@ export class EIP1559SignedTransaction {
     const amount = RlpUintLike.from(RlpItem.as(list.value[6]))
     const data = RlpDataLike.from(RlpItem.as(list.value[7]))
 
-    const accessList = RlpList.as(list.value[8])
+    const accessList = RlpList.as(list.value[8]).value.map(EIP2930AccessItem.from)
 
     const yParity = RlpUintLike.from(RlpItem.as(list.value[9]))
 
@@ -181,7 +182,7 @@ export class EIP1559SignedTransaction {
     const amount = RlpUintLike.into(this.amount)
     const data = RlpDataLike.into(this.data)
 
-    const accessList = this.accessList
+    const accessList = RlpList.from(this.accessList.map(EIP2930AccessItem.into))
 
     const yParity = RlpUintLike.into(this.yParity)
 
